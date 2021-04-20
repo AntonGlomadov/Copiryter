@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.15)
+svCMakeCore("LIB")
+find_package( OpenCV REQUIRED )
+include_directories(${OpenCV_INCLUDE_DIRS})
+target_include_directories("${PROJECT_NAME}" PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../ext/nlohmann_json/single_include/")
+TARGET_LINK_LIBRARIES( "${PROJECT_NAME}" Logger ${OpenCV_LIBS})

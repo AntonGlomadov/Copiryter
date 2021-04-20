@@ -44,6 +44,9 @@ namespace WindowsFormsApp1
         }
         private void copyBatton_Click(object sender, EventArgs e)
         {
+            if (checkedListBox1.CheckedItems.Count==0) return;
+            copyBatton.Enabled = false;
+            stopButton.Enabled = true;
             label4.Text = "Proces start";
             var fileNum = fileCounter();
             progressBar1.Visible = true;
@@ -51,23 +54,41 @@ namespace WindowsFormsApp1
             progressBar1.Maximum = fileNum;
             progressBar1.Value = 1;
             progressBar1.Step = 1;
+            worker.WorkerReportsProgress = true;
+            worker.WorkerSupportsCancellation = true;
+            worker.DoWork += new DoWorkEventHandler(worker_DoWork);
+            worker.ProgressChanged += new ProgressChangedEventHandler(worker_ProgressChanged);
+            worker.RunWorkerAsync();
+            if (!worker.IsBusy)
+            {
+                copyBatton.Enabled = true;
+                stopButton.Enabled = false;
+                label4.Text = "Progres finished";
+            }
+        }
+        private void worker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            var worker = sender as BackgroundWorker;
             foreach (var folderName in checkedListBox1.CheckedItems)
             {
-                var pathWhere = filetext +"\\"+ folderName+"\\";
-                Directory.CreateDirectory(pathWhere);
+                var pathWhere = textBox1.Text+"\\";
+                Directory.CreateDirectory(pathWhere+folderName+"\\");
                 foreach (var disk in allDrives)
                 {
                     if (disk.Name == @"C:\") continue;
                     var curentpath = disk + "" + folderName+"\\";
-                    CopyDir(curentpath,pathWhere);
+                    if (!Directory.Exists(curentpath)) continue;
+                    CopyDir(curentpath,pathWhere+folderName+"\\");
+                    worker.ReportProgress(0);
                 }
             }
+            copyBatton.Enabled = true;
+            stopButton.Enabled = false;
+            label4.Text = "Progres finished";
+        }
 
-            if (progressBar1.Value == progressBar1.Maximum)
-            {
-                label4.Text = "Progres finished";
-            }
-
+        private void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
         }
         
         private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -77,8 +98,7 @@ namespace WindowsFormsApp1
         private void button1_Click(object sender, EventArgs e)
         {
             if (folderBrowserDialog1.ShowDialog() != DialogResult.OK) return;
-            filetext = folderBrowserDialog1.SelectedPath;
-            textBox1.Text = filetext;
+            textBox1.Text = folderBrowserDialog1.SelectedPath;
         }
         
         private  void CopyDir(string SourcePath,string DestinationPath)
@@ -92,18 +112,24 @@ namespace WindowsFormsApp1
                 }
                 catch(Exception e)
                 {
+                    continue;
                 }
             }
             foreach (string newPath in Directory.GetFiles(SourcePath, "*.*", 
                 SearchOption.AllDirectories))
             {
+                if (worker.CancellationPending==true) return;
                 try
                 {
                     File.Copy(newPath, newPath.Replace(SourcePath, DestinationPath), true);
                     progressBar1.PerformStep();
+                    System.Threading.Thread.Sleep(1);
                 }
                 catch(Exception e)
                 {
+                    progressBar1.PerformStep();
+                    System.Threading.Thread.Sleep(1);
+                    continue;
                 }
             }
         }
@@ -130,13 +156,19 @@ namespace WindowsFormsApp1
             }
             return fileCount;
         }
-
-        private string filetext;
+        
         private DriveInfo[] allDrives;
         private HashSet<string> folders= new HashSet<string>();
+        private  BackgroundWorker worker = new BackgroundWorker();
 
         private void label4_Click(object sender, EventArgs e)
         {
         }
+
+        private void stopButton_Click(object sender, EventArgs e)
+        {
+            worker.CancelAsync();
+        }
+        
     }
 }

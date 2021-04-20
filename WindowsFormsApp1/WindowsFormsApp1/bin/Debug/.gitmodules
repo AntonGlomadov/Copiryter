@@ -1,0 +1,9 @@
+[submodule "cmakefunctions"]
+	path = cmakefunctions
+	url = git@gitlab.com:scanviz_team/sharedprojects/cmakefunctions.git
+[submodule "ext/logger"]
+	path = ext/logger
+	url = git@gitlab.com:scanviz_team/sharedprojects/logger.git
+[submodule "ext/nlohmann_json"]
+	path = ext/nlohmann_json
+	url = git@gitlab.com:scanviz_team/archive/nlohmann_json.git

@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.15)
+svCMakeCore("APP")
+find_package( OpenCV REQUIRED )
+include_directories(${OpenCV_INCLUDE_DIRS})
+TARGET_LINK_LIBRARIES( "${PROJECT_NAME}" Logger Snitcher ${OpenCV_LIBS})

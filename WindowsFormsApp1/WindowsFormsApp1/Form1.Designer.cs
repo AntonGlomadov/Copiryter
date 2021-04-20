@@ -40,6 +40,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.label4 = new System.Windows.Forms.Label();
+            this.stopButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // checkedListBox1
@@ -79,12 +80,12 @@
             // 
             this.progressBar1.Location = new System.Drawing.Point(10, 482);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(532, 25);
+            this.progressBar1.Size = new System.Drawing.Size(454, 25);
             this.progressBar1.TabIndex = 5;
             // 
             // copyBatton
             // 
-            this.copyBatton.Location = new System.Drawing.Point(558, 482);
+            this.copyBatton.Location = new System.Drawing.Point(479, 482);
             this.copyBatton.Name = "copyBatton";
             this.copyBatton.Size = new System.Drawing.Size(73, 25);
             this.copyBatton.TabIndex = 6;
@@ -98,6 +99,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(531, 20);
             this.textBox1.TabIndex = 7;
+            this.textBox1.Text = "\\\\10.10.11.11\\e\\scan_data";
             // 
             // label3
             // 
@@ -125,12 +127,24 @@
             this.label4.TabIndex = 10;
             this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
+            // stopButton
+            // 
+            this.stopButton.Enabled = false;
+            this.stopButton.Location = new System.Drawing.Point(558, 482);
+            this.stopButton.Name = "stopButton";
+            this.stopButton.Size = new System.Drawing.Size(73, 25);
+            this.stopButton.TabIndex = 11;
+            this.stopButton.Text = "Stop";
+            this.stopButton.UseVisualStyleBackColor = true;
+            this.stopButton.Click += new System.EventHandler(this.stopButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(643, 532);
+            this.Controls.Add(this.stopButton);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label3);
@@ -146,6 +160,8 @@
             this.ResumeLayout(false);
             this.PerformLayout();
         }
+
+        private System.Windows.Forms.Button stopButton;
 
         private System.Windows.Forms.Label label4;
 
